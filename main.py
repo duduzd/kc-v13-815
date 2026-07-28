@@ -1,3 +1,12 @@
+import os, threading
+from flask import Flask
+app_flask = Flask(__name__)
+@app_flask.route('/')
+def home(): return "KC V13 ONLINE", 200
+def run_flask():
+    port = int(os.environ.get("PORT", 10000))
+    app_flask.run(host="0.0.0.0", port=port)
+threading.Thread(target=run_flask, daemon=True).start()
 # KC V13 - CLOUD 24H + RELATÓRIO GREEN/RED POR HORA
 # Configurado para Karleanderson - Musques Espanha -> Cloud Brasil
 # TOKEN: 8974020008:AAE6... (oculto) | CHAT_ID: 815116732
