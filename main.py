@@ -18,8 +18,8 @@ import statistics
 from datetime import datetime
 from collections import defaultdict
 
-BOT_TOKEN = "8974020008:AAE6eEGYyV_JEYD48gUVzAoe2a9ViXCf2G0"
-CHAT_ID = "815116732"
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID", "815116732")
 MIN_FORCA = 80  # só 80%+
 rodadas = []
 historico_sinais = []  # para relatório
