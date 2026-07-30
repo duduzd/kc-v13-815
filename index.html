@@ -1,34 +1,54 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>KC V13</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#07070b;color:#fff;font-family:Arial}.top{background:linear-gradient(90deg,#8b00ff,#ff0080);padding:12px;text-align:center;font-weight:900}.wrap{max-width:500px;margin:0 auto;padding:12px}.card{background:#14141e;border-radius:18px;padding:16px;margin:10px 0;border:1px solid #2a2a3a}.gap{text-align:center}.num{font-size:78px;font-weight:900;text-shadow:0 0 20px #8b00ff}.sinal{padding:14px;border-radius:12px;text-align:center;font-weight:900;margin:10px 0}.on{background:linear-gradient(90deg,#00ff88,#00e0ff);color:#000;animation:p 1s infinite}.off{background:#1e1e2a;color:#666} @keyframes p{0%,100%{scale:1}50%{scale:1.04}}.bolas{display:flex;gap:6px;overflow-x:auto;padding:8px 0}.b{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0}.br{background:#fff;color:#000;box-shadow:0 0 12px #fff}.vm{background:#ff1a1a}.pt{background:#111;border:1px solid #444}</style></head><body>
-<div class="top">⚡ KC V13 • MINERADOR ONLINE 24H • BRASIL SEM VPN ⚡</div>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KC V13 REAL</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#07070b;color:#fff;font-family:Arial}.top{background:linear-gradient(90deg,#8b00ff,#ff0080);padding:12px;text-align:center;font-weight:900;font-size:13px}.wrap{max-width:500px;margin:auto;padding:12px}.card{background:#14141e;border-radius:18px;padding:14px;margin:10px 0;border:1px solid #2a2a3a}.num{font-size:72px;font-weight:900;text-align:center}.sinal{padding:14px;border-radius:12px;text-align:center;font-weight:900}.on{background:linear-gradient(90deg,#00ff88,#00e0ff);color:#000;animation:p 1s infinite}.off{background:#1e1e2a;color:#666}.alerta{border:2px solid #00ff88;box-shadow:0 0 20px #00ff88}.bolas{display:flex;gap:5px;overflow-x:auto;padding:8px 0}.b{min-width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}.br{background:#fff;color:#000}.vm{background:#e11}.pt{background:#222;border:1px solid #555}.vpn{font-size:11px;padding:6px 10px;border-radius:20px;display:inline-block;margin-top:6px}.vpn.on{background:#00ff88;color:#000}.vpn.off{background:#ff0044;color:#fff}@keyframes p{50%{transform:scale(1.03)}}</style></head><body>
+<div class="top">⚡ KC V13 REAL • PRESSÃO + CRUZAMENTO • BRASIL ⚡<br><span id="vpnStatus" class="vpn off">🔴 VPN DESLIGADA - MODO DEMO</span></div>
 <div class="wrap">
-<div class="card gap"><div style="opacity:.6;font-size:12px;letter-spacing:2px">🟢 GAP ATUAL DO BRANCO</div><div class="num" id="g">0</div><div style="opacity:.7;font-size:13px">Média: <span id="m">9</span> • Target: <b>12+</b></div></div>
-<div class="sinal off" id="s">🔍 ANALISANDO...</div>
-<div class="card"><div style="font-weight:800">🎰 HISTÓRICO AO VIVO (50)</div><div class="bolas" id="h"></div></div>
-<div class="card"><div>🎯 PUXADORES: <span id="px"></span></div></div>
-<div class="card"><div>⏰ DEVEDORAS: <span id="dv"></span></div></div>
-<div style="text-align:center;opacity:.3;font-size:10px;padding:20px">kc-v13-815.onrender.com • ONLINE 24H</div>
+<div class="card"><div style="text-align:center;opacity:.6;font-size:11px">GAP + PRESSÃO + CRUZAMENTO</div><div class="num" id="gap">0</div><div style="display:flex;justify-content:space-around;font-size:12px;opacity:.8"><span>Pressão: <b id="press">--</b></span><span>Cruza: <b id="cruza">--</b></span><span>Média: 9</span></div></div>
+<div class="sinal off" id="sinal">🔍 Aguardando VPN...</div>
+<div class="card"><div>🎰 AO VIVO (<span id="modo">DEMO</span>)</div><div class="bolas" id="hist"></div></div>
+<div class="card" style="font-size:12px">🧠 LÓGICA REAL:<br>• Pressão = 5+ mesma cor seguida<br>• Cruzamento = R-P-R-P<br>• GAP 10+ + Pressão = SINAL 15x</div>
 </div>
 <script>
-let hist=[],gap=0;
-function add(){
- let cor=Math.random()<0.07?0:Math.random()<0.5?1:2;
- let num=cor==0?0:Math.floor(Math.random()*14)+1;
- hist.push({cor,num});
- if(hist.length>50) hist.shift();
- gap=0; for(let i=hist.length-1;i>=0;i--){ if(hist[i].cor==0) break; gap++; }
- document.getElementById('g').innerText=gap;
- document.getElementById('m').innerText=9;
- let s=document.getElementById('s');
- if(gap>=12){ s.className='sinal on'; s.innerHTML='🚨 SINAL BRANCO 15x! GAP '+gap+' 🚨'; }
- else{ s.className='sinal off'; s.innerText='⏳ GAP '+gap+' - Aguardando padrão'; }
- let h=document.getElementById('h'); h.innerHTML='';
- [...hist].reverse().forEach(x=>{
-  let d=document.createElement('div'); d.className='b '+(x.cor==0?'br':x.cor==1?'vm':'pt'); d.innerText=x.num; h.appendChild(d);
- });
- document.getElementById('px').innerText='#7 (3x) #2 (2x) #12';
- document.getElementById('dv').innerText='#5 atr:22 #11 atr:31';
+let hist=[], gap=0, modoReal=false;
+async function tentaReal(){
+ try{
+  // Tenta pegar dados reais da Blaze pelo navegador do usuário (só funciona com VPN BR)
+  const r = await fetch('https://blaze.com/api/singleplayer-originals/originals/roulette/recent', {cache:'no-store'});
+  if(!r.ok) throw 'fail';
+  const data = await r.json();
+  // Se conseguiu, entrou em modo REAL
+  if(!modoReal){ modoReal=true; document.getElementById('vpnStatus').className='vpn on'; document.getElementById('vpnStatus').innerText='🟢 VPN LIGADA - MODO REAL BRASIL'; document.getElementById('modo').innerText='REAL BLAZE'; }
+  // Processa últimos 50
+  hist = data.slice(0,50).reverse().map(x=>({cor:x.color,num:x.roll}));
+  calc();
+  return true;
+ }catch(e){ return false; }
 }
-for(let i=0;i<30;i++) add();
-setInterval(add,2000);
+function calc(){
+ gap=0; for(let i=hist.length-1;i>=0;i--){ if(hist[i].cor==0) break; gap++; }
+ // PRESSÃO
+ let press=0, corAtual=hist[hist.length-1]?.cor; for(let i=hist.length-1;i>=0;i--){ if(hist[i].cor==corAtual && hist[i].cor!=0) press++; else break; }
+ let cruz=0; for(let i=hist.length-1;i>0;i--){ if(hist[i].cor!=0 && hist[i-1].cor!=0 && hist[i].cor!=hist[i-1].cor) cruz++; else break; }
+ document.getElementById('gap').innerText=gap;
+ document.getElementById('press').innerText=press+(press>=5?'🔥':'');
+ document.getElementById('cruza').innerText=cruz+(cruz>=3?'⚡':'');
+ let s=document.getElementById('sinal');
+ // ESTRATÉGIA REAL: Pressão 5+ OU Cruzamento 3+ + GAP 8+
+ if((press>=5 || cruz>=3) && gap>=8){
+  s.className='sinal on alerta'; s.innerHTML='🚨 SINAL REAL 15x!<br><small>PRESSÃO '+press+' + CRUZA '+cruz+' + GAP '+gap+'</small>';
+  if(!s.beeped){ let a=new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3'); a.play().catch(()=>{}); s.beeped=true; setTimeout(()=>s.beeped=false,10000); }
+ } else if(modoReal){
+  s.className='sinal off'; s.innerText='⏳ REAL: Pressão '+press+' | Cruza '+cruz+' | GAP '+gap+' - Aguardando';
+ } else {
+  s.className='sinal off'; s.innerText='⏳ DEMO: Pressão '+press+' | Cruza '+cruz+' | GAP '+gap;
+ }
+ let h=document.getElementById('hist'); h.innerHTML=''; [...hist].slice(-20).reverse().forEach(x=>{ let d=document.createElement('div'); d.className='b '+(x.cor==0?'br':x.cor==1?'vm':'pt'); d.innerText=x.num; h.appendChild(d); });
+}
+function demoAdd(){
+ if(modoReal) return;
+ let cor=Math.random()<0.07?0:Math.random()<0.5?1:2; let num=cor==0?0:Math.floor(Math.random()*14)+1;
+ hist.push({cor,num}); if(hist.length>50) hist.shift(); calc();
+}
+// Tenta real a cada 3s, se falhar roda demo
+setInterval(async()=>{ let ok=await tentaReal(); if(!ok){ demoAdd(); if(modoReal){ modoReal=false; document.getElementById('vpnStatus').className='vpn off'; document.getElementById('vpnStatus').innerText='🔴 VPN DESLIGADA - MODO DEMO'; document.getElementById('modo').innerText='DEMO'; } } },3000);
+for(let i=0;i<20;i++) demoAdd();
 </script></body></html>
