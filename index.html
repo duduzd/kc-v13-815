@@ -1,54 +1,56 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KC V13 REAL</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#07070b;color:#fff;font-family:Arial}.top{background:linear-gradient(90deg,#8b00ff,#ff0080);padding:12px;text-align:center;font-weight:900;font-size:13px}.wrap{max-width:500px;margin:auto;padding:12px}.card{background:#14141e;border-radius:18px;padding:14px;margin:10px 0;border:1px solid #2a2a3a}.num{font-size:72px;font-weight:900;text-align:center}.sinal{padding:14px;border-radius:12px;text-align:center;font-weight:900}.on{background:linear-gradient(90deg,#00ff88,#00e0ff);color:#000;animation:p 1s infinite}.off{background:#1e1e2a;color:#666}.alerta{border:2px solid #00ff88;box-shadow:0 0 20px #00ff88}.bolas{display:flex;gap:5px;overflow-x:auto;padding:8px 0}.b{min-width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}.br{background:#fff;color:#000}.vm{background:#e11}.pt{background:#222;border:1px solid #555}.vpn{font-size:11px;padding:6px 10px;border-radius:20px;display:inline-block;margin-top:6px}.vpn.on{background:#00ff88;color:#000}.vpn.off{background:#ff0044;color:#fff}@keyframes p{50%{transform:scale(1.03)}}</style></head><body>
-<div class="top">⚡ KC V13 REAL • PRESSÃO + CRUZAMENTO • BRASIL ⚡<br><span id="vpnStatus" class="vpn off">🔴 VPN DESLIGADA - MODO DEMO</span></div>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KC V13 REAL VPN</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#07070b;color:#fff;font-family:Arial}.top{background:linear-gradient(90deg,#8b00ff,#ff0080);padding:12px;text-align:center;font-weight:900}.wrap{max-width:500px;margin:auto;padding:12px}.card{background:#14141e;border-radius:18px;padding:14px;margin:10px 0;border:1px solid #2a2a3a}.num{font-size:72px;font-weight:900;text-align:center}.sinal{padding:14px;border-radius:12px;text-align:center;font-weight:900}.on{background:linear-gradient(90deg,#00ff88,#00e0ff);color:#000;animation:p 1s infinite;box-shadow:0 0 20px #00ff88}.off{background:#1e1e2a;color:#888}.bolas{display:flex;gap:5px;overflow-x:auto;padding:8px 0}.b{min-width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}.br{background:#fff;color:#000;box-shadow:0 0 10px #fff}.vm{background:#e11}.pt{background:#222;border:1px solid #555}.vpn{font-size:11px;padding:6px 12px;border-radius:20px;display:inline-block;margin-top:6px}.vpn.on{background:#00ff88;color:#000}.vpn.off{background:#ff3b3b;color:#fff}@keyframes p{50%{scale:1.05}}</style></head><body>
+<div class="top">⚡ KC V13 REAL • PRESSÃO + CRUZAMENTO ⚡<br><span id="vpn" class="vpn off">🔴 CHECANDO VPN...</span><br><span id="ipinfo" style="font-size:10px;opacity:.7"></span></div>
 <div class="wrap">
-<div class="card"><div style="text-align:center;opacity:.6;font-size:11px">GAP + PRESSÃO + CRUZAMENTO</div><div class="num" id="gap">0</div><div style="display:flex;justify-content:space-around;font-size:12px;opacity:.8"><span>Pressão: <b id="press">--</b></span><span>Cruza: <b id="cruza">--</b></span><span>Média: 9</span></div></div>
-<div class="sinal off" id="sinal">🔍 Aguardando VPN...</div>
-<div class="card"><div>🎰 AO VIVO (<span id="modo">DEMO</span>)</div><div class="bolas" id="hist"></div></div>
-<div class="card" style="font-size:12px">🧠 LÓGICA REAL:<br>• Pressão = 5+ mesma cor seguida<br>• Cruzamento = R-P-R-P<br>• GAP 10+ + Pressão = SINAL 15x</div>
+<div class="card"><div style="text-align:center;opacity:.6;font-size:11px">GAP + PRESSÃO + CRUZAMENTO REAL</div><div class="num" id="gap">--</div><div style="display:flex;justify-content:space-around;font-size:12px"><span>Pressão: <b id="press">--</b></span><span>Cruza: <b id="cruza">--</b></span><span>GAP</span></div></div>
+<div class="sinal off" id="sinal">🔍 Conectando...</div>
+<div class="card"><div>🎰 AO VIVO (<span id="modo">--</span>)</div><div class="bolas" id="hist"></div></div>
+<div class="card" style="font-size:11px">✅ LÓGICA: Pressão 5+ | Cruza 3+ | GAP 10+ = SINAL 15x<br>Com VPN BR ligada, puxa dados REAIS da Blaze via proxy.</div>
 </div>
 <script>
-let hist=[], gap=0, modoReal=false;
-async function tentaReal(){
+let hist=[], gap=0, real=false;
+async function checkVPN(){
  try{
-  // Tenta pegar dados reais da Blaze pelo navegador do usuário (só funciona com VPN BR)
-  const r = await fetch('https://blaze.com/api/singleplayer-originals/originals/roulette/recent', {cache:'no-store'});
-  if(!r.ok) throw 'fail';
+  const ip = await fetch('https://ipapi.co/json/').then(r=>r.json());
+  document.getElementById('ipinfo').innerText = ip.country_name+' - '+ip.ip;
+  if(ip.country=='BR'){
+   document.getElementById('vpn').className='vpn on';
+   document.getElementById('vpn').innerText='🟢 VPN BRASIL ATIVA - '+ip.region;
+   return true;
+  } else {
+   document.getElementById('vpn').className='vpn off';
+   document.getElementById('vpn').innerText='🔴 FORA DO BR: '+ip.country_name+' - Liga VPN BR';
+   return false;
+  }
+ }catch(e){ document.getElementById('vpn').innerText='⚠️ Sem internet IP'; return false; }
+}
+async function buscaReal(){
+ try{
+  // Usa proxy que libera CORS pra pegar Blaze mesmo do Render
+  const url = 'https://api.allorigins.win/raw?url=https://blaze.com/api/singleplayer-originals/originals/roulette/recent';
+  const r = await fetch(url,{cache:'no-store'});
+  if(!r.ok) throw 'no';
   const data = await r.json();
-  // Se conseguiu, entrou em modo REAL
-  if(!modoReal){ modoReal=true; document.getElementById('vpnStatus').className='vpn on'; document.getElementById('vpnStatus').innerText='🟢 VPN LIGADA - MODO REAL BRASIL'; document.getElementById('modo').innerText='REAL BLAZE'; }
-  // Processa últimos 50
   hist = data.slice(0,50).reverse().map(x=>({cor:x.color,num:x.roll}));
-  calc();
-  return true;
+  real=true; document.getElementById('modo').innerText='REAL BLAZE';
+  calc(); return true;
  }catch(e){ return false; }
 }
 function calc(){
  gap=0; for(let i=hist.length-1;i>=0;i--){ if(hist[i].cor==0) break; gap++; }
- // PRESSÃO
- let press=0, corAtual=hist[hist.length-1]?.cor; for(let i=hist.length-1;i>=0;i--){ if(hist[i].cor==corAtual && hist[i].cor!=0) press++; else break; }
- let cruz=0; for(let i=hist.length-1;i>0;i--){ if(hist[i].cor!=0 && hist[i-1].cor!=0 && hist[i].cor!=hist[i-1].cor) cruz++; else break; }
+ let press=0; let last=hist[hist.length-1]?.cor; for(let i=hist.length-1;i>=0;i--){ if(hist[i].cor==last && hist[i].cor!=0) press++; else break; }
+ let cruza=0; for(let i=hist.length-1;i>0;i--){ if(hist[i].cor!=0 && hist[i-1].cor!=0 && hist[i].cor!=hist[i-1].cor) cruza++; else break; }
  document.getElementById('gap').innerText=gap;
- document.getElementById('press').innerText=press+(press>=5?'🔥':'');
- document.getElementById('cruza').innerText=cruz+(cruz>=3?'⚡':'');
+ document.getElementById('press').innerText=press; document.getElementById('cruza').innerText=cruza;
  let s=document.getElementById('sinal');
- // ESTRATÉGIA REAL: Pressão 5+ OU Cruzamento 3+ + GAP 8+
- if((press>=5 || cruz>=3) && gap>=8){
-  s.className='sinal on alerta'; s.innerHTML='🚨 SINAL REAL 15x!<br><small>PRESSÃO '+press+' + CRUZA '+cruz+' + GAP '+gap+'</small>';
-  if(!s.beeped){ let a=new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3'); a.play().catch(()=>{}); s.beeped=true; setTimeout(()=>s.beeped=false,10000); }
- } else if(modoReal){
-  s.className='sinal off'; s.innerText='⏳ REAL: Pressão '+press+' | Cruza '+cruz+' | GAP '+gap+' - Aguardando';
- } else {
-  s.className='sinal off'; s.innerText='⏳ DEMO: Pressão '+press+' | Cruza '+cruz+' | GAP '+gap;
- }
+ if((press>=5 || cruza>=3) && gap>=8){ s.className='sinal on'; s.innerHTML='🚨 SINAL BRANCO 15x!<br><small>PRESSÃO '+press+' CRUZA '+cruza+' GAP '+gap+'</small>'; }
+ else { s.className='sinal off'; s.innerText='⏳ '+(real?'REAL':'DEMO')+' | Pressão '+press+' Cruza '+cruza+' GAP '+gap+' - Aguardando'; }
  let h=document.getElementById('hist'); h.innerHTML=''; [...hist].slice(-20).reverse().forEach(x=>{ let d=document.createElement('div'); d.className='b '+(x.cor==0?'br':x.cor==1?'vm':'pt'); d.innerText=x.num; h.appendChild(d); });
 }
-function demoAdd(){
- if(modoReal) return;
- let cor=Math.random()<0.07?0:Math.random()<0.5?1:2; let num=cor==0?0:Math.floor(Math.random()*14)+1;
- hist.push({cor,num}); if(hist.length>50) hist.shift(); calc();
-}
-// Tenta real a cada 3s, se falhar roda demo
-setInterval(async()=>{ let ok=await tentaReal(); if(!ok){ demoAdd(); if(modoReal){ modoReal=false; document.getElementById('vpnStatus').className='vpn off'; document.getElementById('vpnStatus').innerText='🔴 VPN DESLIGADA - MODO DEMO'; document.getElementById('modo').innerText='DEMO'; } } },3000);
-for(let i=0;i<20;i++) demoAdd();
+function demo(){ if(real) return; let cor=Math.random()<0.07?0:Math.random()<0.5?1:2; let num=cor==0?0:Math.floor(Math.random()*14)+1; hist.push({cor,num}); if(hist.length>50) hist.shift(); calc(); }
+setInterval(async()=>{
+ await checkVPN();
+ let ok=await buscaReal(); if(!ok){ real=false; document.getElementById('modo').innerText='DEMO'; demo(); }
+},4000);
+checkVPN(); for(let i=0;i<25;i++) demo();
 </script></body></html>
