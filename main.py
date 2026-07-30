@@ -1,37 +1,36 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-import os, requests
+from pydantic import BaseModel
+import os, time
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-def get_index():
-    try:
-        with open("index.html","r",encoding="utf-8") as f: return f.read()
-    except: return "<h1>KC V13</h1>"
+# memória
+DADOS = {"historico": [], "update": 0}
+
+class Push(BaseModel):
+    historico: list
+    secret: str
 
 @app.get("/", response_class=HTMLResponse)
-async def home(): return get_index()
+def home():
+    try:
+        with open("index.html","r",encoding="utf-8") as f: return f.read()
+    except: return "KC V13"
+
+@app.post("/api/push")
+def push(p: Push):
+    if p.secret!= "kc815": return {"ok":False}
+    DADOS["historico"] = p.historico[-50:]
+    DADOS["update"] = int(time.time())
+    return {"ok":True}
 
 @app.get("/api/real")
 def real():
-    try:
-        # Tenta 3 APIs diferentes da Blaze
-        headers = {"User-Agent":"Mozilla/5.0","Origin":"https://blaze.com","Referer":"https://blaze.com/pt/games/double"}
-        r = requests.get("https://blaze.com/api/singleplayer-originals/originals/roulette/recent", headers=headers, timeout=10)
-        if r.status_code==200:
-            data = r.json()
-            # Converte pro formato do painel
-            out=[]
-            for x in data[:50]:
-                out.append({"cor": x.get("color",1), "num": x.get("roll",0)})
-            return {"ok":True, "historico": out[::-1]}
-    except Exception as e:
-        print(e)
-    return {"ok":False}
+    return {"ok": True if DADOS["historico"] else False, "historico": DADOS["historico"], "age": int(time.time())-DADOS["update"]}
 
 if __name__=="__main__":
     import uvicorn
-    port=int(os.environ.get("PORT",10000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT",10000)))
