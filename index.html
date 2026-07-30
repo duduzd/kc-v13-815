@@ -1,31 +1,36 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KC V13 REAL SYNC</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#07070b;color:#fff;font-family:Arial}.top{background:linear-gradient(90deg,#8b00ff,#ff0080);padding:10px;text-align:center;font-weight:900}.wrap{max-width:500px;margin:auto;padding:10px}.card{background:#14141e;border-radius:16px;padding:12px;margin:8px 0;border:1px solid #333}.num{font-size:64px;font-weight:900;text-align:center}.sinal{padding:12px;border-radius:12px;text-align:center;font-weight:900}.on{background:linear-gradient(90deg,#00ff88,#00e0ff);color:#000}.off{background:#1e1e2a;color:#888}.bolas{display:flex;gap:4px;overflow-x:auto;padding:6px 0}.b{min-width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px}.br{background:#fff;color:#000}.vm{background:#e11}.pt{background:#222;border:1px solid #444}</style></head><body>
-<div class="top">⚡ KC V13 REAL • SYNC COM BLAZE • <span id="sts">CONECTANDO</span></div>
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KC V13 REAL VPN CLIENT</title>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#07070b;color:#fff;font-family:Arial}.top{background:linear-gradient(90deg,#00ff88,#8b00ff);padding:12px;text-align:center;font-weight:900}.wrap{max-width:500px;margin:auto;padding:12px}.card{background:#14141e;border-radius:16px;padding:12px;margin:8px 0;border:1px solid #333}.num{font-size:64px;font-weight:900;text-align:center}.sinal{padding:14px;border-radius:12px;text-align:center;font-weight:900}.on{background:linear-gradient(90deg,#00ff88,#00e0ff);color:#000;animation:p 1s infinite}.off{background:#1e1e2a;color:#888}.bolas{display:flex;gap:5px;overflow-x:auto;padding:8px 0}.b{min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}.br{background:#fff;color:#000;box-shadow:0 0 10px #fff}.vm{background:#e11}.pt{background:#222;border:1px solid #555}.ok{color:#00ff88;font-size:11px}.err{color:#ff4444;font-size:11px}@keyframes p{50%{scale:1.05}}</style></head><body>
+<div class="top">⚡ KC V13 REAL • CLIENTE VPN • <span id="sts">CONECTANDO</span><br><span id="ip" style="font-size:10px;opacity:.8"></span></div>
 <div class="wrap">
-<div class="card"><div style="text-align:center;opacity:.6;font-size:11px">GAP + PRESSÃO + CRUZAMENTO REAL</div><div class="num" id="gap">--</div><div style="display:flex;justify-content:space-around;font-size:11px"><span>P: <b id="p">--</b></span><span>C: <b id="c">--</b></span><span id="src">BUSCANDO</span></div></div>
-<div class="sinal off" id="s">🔍 Sincronizando com Blaze...</div>
-<div class="card"><div>🎰 AO VIVO</div><div class="bolas" id="h"></div></div>
+<div class="card"><div style="text-align:center;opacity:.6;font-size:11px">GAP + PRESSÃO + CRUZAMENTO</div><div class="num" id="gap">--</div><div style="display:flex;justify-content:space-around;font-size:11px"><span>P: <b id="p">--</b></span><span>C: <b id="c">--</b></span><span id="modo">CLIENTE</span></div></div>
+<div class="sinal off" id="s">🔍 Conectando na Blaze via sua VPN...</div>
+<div class="card"><div>🎰 AO VIVO <span id="src" class="err">Aguardando dados reais...</span></div><div class="bolas" id="h"></div></div>
+<div class="card" style="font-size:10px;opacity:.7">Virginia é só hospedagem. Dados vem do SEU celular com VPN BR. Se VPN desligada, fica DEMO.</div>
 </div>
 <script>
 let hist=[];
-async function load(){
- try{
-  const r=await fetch('/api/real',{cache:'no-store'}); const j=await r.json();
-  if(j.ok && j.historico.length>5){
-   hist=j.historico; document.getElementById('sts').innerText='REAL BLAZE'; document.getElementById('src').innerText='REAL'; calc(); return;
-  }
- }catch(e){}
- // Se falhar, continua no demo mas avisa
- document.getElementById('sts').innerText='DEMO - API bloqueada'; document.getElementById('src').innerText='DEMO';
- demo();
-}
 function calc(){
  let gap=0; for(let i=hist.length-1;i>=0;i--){ if(hist[i].cor==0) break; gap++; }
- let press=0,last=hist[hist.length-1]?.cor; for(let i=hist.length-1;i>=0;i--){ if(hist[i].cor==last && hist[i].cor!=0) press++; else break; }
+ let press=0,last=hist[hist.length-1]?.cor; for(let i=hist.length-1;i>=0;i--){ if(hist[i].cor==last&&hist[i].cor!=0) press++; else break; }
  let cruza=0; for(let i=hist.length-1;i>0;i--){ if(hist[i].cor!=0&&hist[i-1].cor!=0&&hist[i].cor!=hist[i-1].cor) cruza++; else break; }
  document.getElementById('gap').innerText=gap; document.getElementById('p').innerText=press; document.getElementById('c').innerText=cruza;
- let s=document.getElementById('s'); if((press>=5||cruza>=3)&&gap>=8){ s.className='sinal on'; s.innerHTML='🚨 SINAL 15x! P'+press+' C'+cruza+' GAP'+gap; } else { s.className='sinal off'; s.innerText='Aguardando P'+press+' C'+cruza+' GAP'+gap; }
+ let s=document.getElementById('s'); if((press>=5||cruza>=3)&&gap>=8){ s.className='sinal on'; s.innerHTML='🚨 SINAL BRANCO 15x! P'+press+' C'+cruza+' GAP'+gap; } else { s.className='sinal off'; s.innerText='Aguardando P'+press+' C'+cruza+' GAP'+gap; }
  let h=document.getElementById('h'); h.innerHTML=''; [...hist].slice(-20).reverse().forEach(x=>{ let d=document.createElement('div'); d.className='b '+(x.cor==0?'br':x.cor==1?'vm':'pt'); d.innerText=x.num; h.appendChild(d); });
 }
+function addReal(cor,num){
+ hist.push({cor,num}); if(hist.length>50) hist.shift();
+ document.getElementById('src').className='ok'; document.getElementById('src').innerText='REAL - '+new Date().toLocaleTimeString();
+ calc();
+}
 function demo(){ let cor=Math.random()<0.07?0:Math.random()<0.5?1:2; let num=cor==0?0:Math.floor(Math.random()*14)+1; hist.push({cor,num}); if(hist.length>50) hist.shift(); calc(); }
-setInterval(load,5000); load();
+// 1. Tenta WebSocket REAL da Blaze (funciona com VPN BR porque vem do seu IP)
+try{
+ const socket = io("https://api-v2.blaze.com", {transports:["websocket"], path:"/replication/"});
+ socket.on("connect",()=>{ document.getElementById('sts').innerText='CONECTADO REAL'; document.getElementById('ip').innerText='VPN BR OK - Dados do seu IP'; });
+ socket.on("double.tick",(data)=>{ if(data && data.color!==undefined){ addReal(data.color, data.roll); } });
+ socket.on("double:recent",(list)=>{ if(Array.isArray(list)){ hist=[]; list.slice(0,30).reverse().forEach(x=>addReal(x.color,x.roll)); } });
+ setTimeout(()=>{ if(hist.length==0){ document.getElementById('sts').innerText='SEM DADOS - Usando DEMO'; setInterval(demo,2000); } },8000);
+}catch(e){ setInterval(demo,2000); }
+// Fallback demo se não conectar em 8s
 </script></body></html>
