@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os, random
 from datetime import datetime
@@ -8,66 +8,51 @@ app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 historico = []
-gap = 3
+gap = 7
 
 def get_hist():
     global historico, gap
     if not historico:
         for i in range(50):
-            cor = random.choices([0,1,2],[1,14])[0]
+            cor = random.choices([0,1,2],[5,47,47])[0]
             num = 0 if cor==0 else random.randint(1,14)
-            historico.append({"cor": cor, "num": num, "hora": datetime.now().strftime("%H:%M")})
-        gap = 7
-    # Simula novo resultado a cada chamada
-    if random.random() > 0.6:
-        cor = random.choices([0,1,2],[1,14,14])[0]
+            historico.append({"cor": cor, "num": num})
+        gap = 8
+    if random.random() > 0.5:
+        cor = random.choices([0,1,2],[5,47,47])[0]
         num = 0 if cor==0 else random.randint(1,14)
-        historico.append({"cor": cor, "num": num, "hora": datetime.now().strftime("%H:%M")})
-        if cor==0:
-            gap=0
-        else:
-            gap+=1
-        historico = historico[-100:]
+        historico.append({"cor": cor, "num": num})
+        gap = 0 if cor==0 else gap+1
+        if len(historico)>100:
+            historico.pop(0)
     return historico
 
-def get_index():
+@app.get("/", response_class=HTMLResponse)
+async def home():
     try:
         with open("index.html","r",encoding="utf-8") as f:
             return f.read()
     except:
         return "<h1>KC V13 ONLINE</h1>"
 
-@app.get("/", response_class=HTMLResponse)
-async def home():
-    return get_index()
-
 @app.get("/api/analise")
 async def analise():
-    global gap
     h = get_hist()
-    # Calcula média
-    gaps = []
-    last = 0
-    for i, x in enumerate(h):
-        if x["cor"]==0:
-            gaps.append(i-last)
-            last=i
-    media = sum(gaps[-10:])//max(1,len(gaps[-10:])) if gaps else 9
-    sinal = gap >= 12
+    global gap
     return {
         "gap_atual": gap,
-        "media_gap": media,
-        "sinal": sinal,
-        "motivo": f"GAP {gap} - SINAL BRANCO 15x!" if sinal else f"GAP {gap} - Analisando puxadores",
+        "media_gap": 9,
+        "sinal": gap >= 12,
+        "motivo": f"GAP {gap} - SINAL BRANCO!" if gap>=12 else f"GAP {gap} - Aguardando",
         "historico": h[-50:],
-        "puxadores": [{"numero": n, "vezes": random.randint(1,5)} for n in [2,7,8,12,14]],
-        "devedoras": [{"numero": n, "atraso": random.randint(15,45)} for n in [3,5,9,11]],
-        "status": "ONLINE 24H"
+        "puxadores": [{"numero": 7, "vezes": 3},{"numero": 2, "vezes": 2}],
+        "devedoras": [{"numero": 5, "atraso": 22},{"numero": 11, "atraso": 31}],
+        "status": "ONLINE"
     }
 
 @app.get("/health")
 def health():
-    return {"status":"online"}
+    return {"status":"ok"}
 
 if __name__ == "__main__":
     import uvicorn
