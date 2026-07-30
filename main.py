@@ -5,8 +5,8 @@ from collections import Counter
 app_flask = Flask(__name__)
 
 # --- SEU TOKEN (mantido) ---
-TOKEN = 8974020008:AAGICZXQEEbEzgqQR3gzhxZJH-8F0zBxpRg # seu token completo
-CHAT_ID = "" # coloca seu chat_id aqui se tiver
+TOKEN = "8974020008:AAGICZXQEEbEzgqQR3gzhxZJH-8F0zBxpRg" # seu token completo
+CHAT_ID = "CHAT_ID = "123456789"" # coloca seu chat_id aqui se tiver
 rodadas = [] # lista de (cor, numero)
 
 def buscar_blaze():
