@@ -52,6 +52,7 @@ def loop():
 
 @app.route('/')
 def home():
+    print("TESTE FLASK OK - ROTA / FOI CHAMADA", flush=True)
     return f"KCS V14 ONLINE | P5: {pedras_atual['5']}/{pedras_max['5']} | {datetime.now()}"
 
 # ESSENCIAL PRO RENDER NÃO FECHAR
