@@ -1,36 +1,28 @@
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-import os, time
+from flask import Flask
+import threading, time, requests, os
+from datetime import datetime
 
-app = FastAPI()
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app = Flask(__name__)
 
-# memória
-DADOS = {"historico": [], "update": 0}
+BOT_TOKEN = os.getenv("BOT_TOKEN") # coloca no Render > Environment
+CHAT_ID = os.getenv("CHAT_ID")
 
-class Push(BaseModel):
-    historico: list
-    secret: str
+# --- SUA LÓGICA ACUMULATIVA ---
+# Aqui vai guardar: Pedra 5 tá 8h09 sem puxar, max 20 = 160%
+pedras_max = {"5": 20, "10": 22, "7": 18}
+pedras_atual = {"5": 0, "10": 0}
 
-@app.get("/", response_class=HTMLResponse)
+def bot_vivo():
+    while True:
+        print(f"[{datetime.now()}] KCS V14 rodando - Pedra 5: {pedras_atual['5']} - GAP")
+        # Aqui entra a leitura da Blaze + checagem de janela
+        # Se estouro + janela aberta = manda telegram
+        time.sleep(60)
+
+@app.route('/')
 def home():
-    try:
-        with open("index.html","r",encoding="utf-8") as f: return f.read()
-    except: return "KC V13"
+    return "KCS V14 ACUMULATIVO ONLINE - @kc_v13_815_bot - Janela + Pedra Devedora"
 
-@app.post("/api/push")
-def push(p: Push):
-    if p.secret!= "kc815": return {"ok":False}
-    DADOS["historico"] = p.historico[-50:]
-    DADOS["update"] = int(time.time())
-    return {"ok":True}
-
-@app.get("/api/real")
-def real():
-    return {"ok": True if DADOS["historico"] else False, "historico": DADOS["historico"], "age": int(time.time())-DADOS["update"]}
-
-if __name__=="__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT",10000)))
+if __name__ == '__main__':
+    threading.Thread(target=bot_vivo, daemon=True).start()
+    app.run(host='0.0.0.0', port=10000)
